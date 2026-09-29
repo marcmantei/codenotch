@@ -65,12 +65,19 @@ final class Updater: NSObject, ObservableObject, SPUUpdaterDelegate {
     private lazy var sparkle = SPUUpdater(hostBundle: .main, applicationBundle: .main,
                                           userDriver: driver, delegate: self)
 
+    // This fork has features that an upstream binary would erase. Do not even
+    // initialize Sparkle in fork builds, including when old preferences say yes.
+    var isForkBuild: Bool { Bundle.main.object(forInfoDictionaryKey: "CodenotchForkBuild") as? Bool == true }
+    var forkUpdateMessage: String {
+        L10n.t("Personal fork: updates are built from marcmantei/codenotch. Original Codenotch updates are disabled to preserve your GitHub displays.")
+    }
+
     /// Mirrors the preference, so switching it off really does stop the checks
     /// rather than only hiding them. Never downloads unasked: what is found is
     /// offered in the notch first.
     var automatic: Bool {
-        get { sparkle.automaticallyChecksForUpdates }
-        set { sparkle.automaticallyChecksForUpdates = newValue }
+        get { !isForkBuild && sparkle.automaticallyChecksForUpdates }
+        set { if !isForkBuild { sparkle.automaticallyChecksForUpdates = newValue } }
     }
 
     var currentVersion: String {
@@ -84,6 +91,7 @@ final class Updater: NSObject, ObservableObject, SPUUpdaterDelegate {
     /// updater is lazy so that `self` exists before it is handed over as the
     /// delegate.
     func start() {
+        guard !isForkBuild else { return }
         guard !started else { return }
         started = true
         sparkle.automaticallyDownloadsUpdates = false
@@ -218,6 +226,10 @@ final class Updater: NSObject, ObservableObject, SPUUpdaterDelegate {
     /// This one *does* show UI — it was asked for, so silence would read as a
     /// broken button.
     func checkNow() {
+        guard !isForkBuild else {
+            outcome = .failed(forkUpdateMessage)
+            return
+        }
         start()
         outcome = .checking
         sparkle.checkForUpdates()

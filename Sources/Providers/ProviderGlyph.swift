@@ -28,6 +28,7 @@ enum ProviderGlyph: String, Codable, Equatable {
     case opencode
     case commandcode
     case copilot
+    case github
     case kimi
     case kilo
     case kiro
@@ -68,6 +69,7 @@ enum ProviderGlyph: String, Codable, Equatable {
         case .grok:   return 1.0
         case .opencode: return 0.95
         case .commandcode: return 0.96
+        case .github: return 1.0
         case .copilot: return 0.96
         case .kimi:   return 0.95
         case .kilo:   return 0.97
@@ -106,6 +108,7 @@ enum ProviderGlyph: String, Codable, Equatable {
         case .grok:   return GlyphOutline.grok
         case .opencode: return GlyphOutline.opencode
         case .commandcode: return GlyphOutline.commandcode
+        case .github: return [] // glyph-github asset (GitHub Octicons, MIT)
         case .copilot: return GlyphOutline.copilot
         case .kimi:   return GlyphOutline.kimi
         case .kilo:   return GlyphOutline.kilo

@@ -54,6 +54,27 @@ final class UsageStore: ObservableObject {
         return snapshot
     }
 
+    /// Replacing an account also invalidates its old reading: a successful
+    /// response from the previous credential must never appear under a new name.
+    func registerGitHubUsageProviders(_ accounts: [UsageProvider]) {
+        let oldIDs = providers.filter { $0.id.hasPrefix("github-usage-") }.map(\.id)
+        for id in oldIDs {
+            cancelRefresh(providerID: id)
+            lastGood.removeValue(forKey: id)
+            archive.forget(id)
+            refusedAccess.remove(id)
+            needsRenewal.remove(id)
+        }
+        providers.removeAll { $0.id.hasPrefix("github-usage-") }
+        snapshots.removeAll { $0.id.hasPrefix("github-usage-") }
+        providers.append(contentsOf: accounts)
+        for provider in accounts { publish(Self.placeholder(provider)) }
+        providerAccountRevision += 1
+        for provider in accounts where !disconnected.contains(provider.id) {
+            refresh(providerID: provider.id)
+        }
+    }
+
     func registerCustomProviders(_ custom: [UsageProvider]) {
         providers.removeAll { $0.id.hasPrefix("custom-endpoint-") }
         providers.append(contentsOf: custom)

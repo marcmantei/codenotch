@@ -1,6 +1,6 @@
 import Foundation
 
-enum ResetTimeFormat: String, CaseIterable, Identifiable {
+enum ResetTimeFormat: String, Codable, CaseIterable, Identifiable {
     case automatic
     case remaining
 

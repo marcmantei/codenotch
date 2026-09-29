@@ -26,7 +26,7 @@ extension View {
 /// crossing-and-notification machinery it switches is Notifications' to
 /// explain.
 private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
-    case accounts, phone, deepseek, ollama, lmstudio, customEndpoints, appearance, notifications, general
+    case accounts, phone, deepseek, ollama, lmstudio, github, customEndpoints, appearance, notifications, general
 
     /// The sections the sidebar lists; Phone only once pairing is offered.
     static var visible: [SettingsSection] {
@@ -36,7 +36,7 @@ private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
     /// Providers with a pane of their own. They are accounts too, so the
     /// sidebar nests them under Accounts rather than listing them beside
     /// Appearance and General, where they read as app-wide settings.
-    static let providerPanes: [SettingsSection] = [.deepseek, .ollama, .lmstudio, .customEndpoints]
+    static let providerPanes: [SettingsSection] = [.deepseek, .ollama, .lmstudio, .github, .customEndpoints]
 
     /// The sidebar's own rows: everything visible that is not nested.
     static var topLevel: [SettingsSection] {
@@ -52,6 +52,7 @@ private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
         case .deepseek:      return "DeepSeek"
         case .ollama:        return "Ollama"   // a product name, the same in every language
         case .lmstudio:      return "LM Studio"
+        case .github: return "GitHub"
         case .customEndpoints: return L10n.t("Custom Endpoints")
         case .appearance:    return L10n.t("Appearance")
         case .notifications: return L10n.t("Notifications")
@@ -78,6 +79,7 @@ private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
         case .deepseek:      return L10n.t("Peak and off-peak pricing for your DeepSeek spend.")
         case .ollama:        return L10n.t("Models running in Ollama on this Mac.")
         case .lmstudio:      return L10n.t("Models loaded in LM Studio on this Mac.")
+        case .github: return L10n.t("Separate accounts for Copilot quotas and Actions billing usage.")
         case .customEndpoints: return L10n.t("OpenAI-compatible APIs, local runtimes and custom proxies.")
         case .appearance:    return L10n.t("How the notch looks and where it sits.")
         case .notifications: return L10n.t("What Codenotch tells you, and when.")
@@ -92,6 +94,7 @@ private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
         case .deepseek:      return "chart.line.uptrend.xyaxis"
         case .ollama:        return "desktopcomputer"
         case .lmstudio:      return "cpu"
+        case .github: return "chart.bar.xaxis"
         case .customEndpoints: return "network"
         case .appearance:    return "paintbrush.fill"
         case .notifications: return "bell.badge.fill"
@@ -109,6 +112,7 @@ private enum SettingsSection: String, CaseIterable, Identifiable, Hashable {
         case .deepseek:      return .orange
         case .ollama:        return .teal
         case .lmstudio:      return .purple
+        case .github: return .gray
         case .customEndpoints: return .indigo
         case .appearance:    return .indigo
         case .notifications: return .red
@@ -722,6 +726,8 @@ struct SettingsView: View {
                 }
                 .formStyle(.grouped)
             }
+        case .github:
+            GitHubUsageSettingsView(preferences: preferences)
         case .customEndpoints:
             CustomEndpointsSettingsView(preferences: preferences)
         case .appearance:    appearancePane
@@ -1340,30 +1346,36 @@ struct SettingsView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
-                Toggle(L10n.t("Check for updates automatically"), isOn: Binding(
-                    get: { updater.automatic },
-                    set: { updater.automatic = $0 }
-                ))
+                if updater.isForkBuild {
+                    Text(updater.forkUpdateMessage).font(.callout).foregroundStyle(.secondary)
+                    Link(L10n.t("Fork update instructions"), destination: URL(string: "https://github.com/marcmantei/codenotch/blob/feat/github-usage-accounts/docs/github-usage.md")!)
+                } else {
+                    Toggle(L10n.t("Check for updates automatically"), isOn: Binding(
+                        get: { updater.automatic },
+                        set: { updater.automatic = $0 }
+                    ))
 
-                HStack(alignment: .firstTextBaseline, spacing: 10) {
-                    // Disclosed rather than merely silent. An app that updates
-                    // itself unprompted *and* reads other apps' credentials is
-                    // exactly the shape security tooling flags; saying so, with
-                    // a way to switch it off, is the difference between a
-                    // background updater and something that looks like it is
-                    // hiding.
-                    Text(L10n.t("Version \(updater.currentVersion). New versions are offered in the notch, and install when you choose Update."))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                    Spacer(minLength: 0)
-                    // The card a new version brings up in the notch, played
-                    // through for a version that is not there.
-                    Button(L10n.t("Preview")) { updater.preview() }
-                        .controlSize(.small)
-                        .help(L10n.t("Show the update card in the notch, with nothing downloaded"))
-                    Button(L10n.t("Check now")) { updater.checkNow() }
-                        .controlSize(.small)
+                    HStack(alignment: .firstTextBaseline, spacing: 10) {
+                        // Disclosed rather than merely silent. An app that updates
+                        // itself unprompted *and* reads other apps' credentials is
+                        // exactly the shape security tooling flags; saying so, with
+                        // a way to switch it off, is the difference between a
+                        // background updater and something that looks like it is
+                        // hiding.
+                        Text(L10n.t("Version \(updater.currentVersion). New versions are offered in the notch, and install when you choose Update."))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                        Spacer(minLength: 0)
+                        // The card a new version brings up in the notch, played
+                        // through for a version that is not there.
+                        Button(L10n.t("Preview")) { updater.preview() }
+                            .controlSize(.small)
+                            .help(L10n.t("Show the update card in the notch, with nothing downloaded"))
+                        Button(L10n.t("Check now")) { updater.checkNow() }
+                            .controlSize(.small)
+                    }
+
                 }
 
                 // Says what happened, where the user is already looking.

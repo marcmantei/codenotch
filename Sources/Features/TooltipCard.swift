@@ -460,13 +460,13 @@ private struct LimitWindowRow: View {
 
     /// Blank rather than invented: some providers never say when the window rolls.
     private var resetText: String {
-        window.resetsAt.map { ResetCopy.text(for: $0, now: now, format: resetTimeFormat) } ?? ""
+        window.resetsAt.map { ResetCopy.text(for: $0, now: now, format: window.resetTimeFormat ?? resetTimeFormat) } ?? ""
     }
 
     /// A count-only row (no fraction, no reset) — like Ollama's per-model request
     /// counts — renders as a single table line: name left, count right.
     private var isCountRow: Bool {
-        window.usedFraction == nil && (window.used != nil || window.detail != nil)
+        window.usedFraction == nil && (window.used != nil || window.detail != nil || window.usedText != nil)
     }
 
     var body: some View {
