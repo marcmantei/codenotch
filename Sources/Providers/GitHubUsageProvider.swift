@@ -126,7 +126,7 @@ actor GitHubUsageProvider: UsageProvider {
         retryAt = nil
         let windows = try configuration.report == .copilot
             ? GitHubCopilotUsage.windows(from: data)
-            : GitHubActionsUsage.windows(from: data, now: date)
+            : GitHubActionsUsage.windows(from: data, now: date, allowance: configuration.effectiveMinutesAllowance)
         return ProviderSnapshot(id: id, displayName: displayName, glyph: glyph,
                                 fidelity: .official, status: .ok, windows: windows,
                                 headlineID: windows.first?.id,
@@ -143,7 +143,7 @@ enum GitHubActionsUsage {
         let netAmount: Double
     }
 
-    static func windows(from data: Data, now: Date) throws -> [LimitWindow] {
+    static func windows(from data: Data, now: Date, allowance: Double? = nil) throws -> [LimitWindow] {
         let report: Report
         do { report = try JSONDecoder().decode(Report.self, from: data) }
         catch { throw UsageProviderError.badResponse(status: 0) }
@@ -157,15 +157,35 @@ enum GitHubActionsUsage {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(secondsFromGMT: 0)!
         let cycle = calendar.dateInterval(of: .month, for: now)!
-        // Billing is not a workflow run counter. Storage contributes to cost,
-        // but must never be added to runner minutes. No invented quota or %.
-        let minuteText = minutes.formatted(.number.precision(.fractionLength(0...2))) + " min"
-        let costText = cost.formatted(.currency(code: "USD"))
-        return [LimitWindow(id: "actions-minutes", label: L10n.t("Actions minutes · Month"),
-                            usedText: minuteText,
-                            resetsAt: cycle.end, duration: cycle.duration, prefersUsedText: true),
-                LimitWindow(id: "actions-cost", label: L10n.t("Actions net cost · Month"),
-                            usedText: costText,
-                            resetsAt: cycle.end, duration: cycle.duration, prefersUsedText: true)]
+        // Billing sums runner minutes, not storage quantities. The user supplies
+        // the allowance; this ratio does not reproduce GitHub's SKU pricing.
+        func minutesText(_ value: Double) -> String {
+            value.formatted(.number.precision(.fractionLength(0...2))) + " min"
+        }
+        let minuteText = minutesText(minutes)
+        var windows: [LimitWindow] = []
+        if let allowance {
+            guard allowance.isFinite, allowance >= 1 else {
+                throw UsageProviderError.apiError(L10n.t("Enter a monthly allowance of at least 1 minute."))
+            }
+            windows.append(LimitWindow(id: "actions-minutes", label: L10n.t("Actions · Month"),
+                                       usedFraction: minutes / allowance, usedText: minuteText,
+                                       detail: "\(minutes.formatted(.number.precision(.fractionLength(0...2)))) / \(minutesText(allowance))",
+                                       resetsAt: cycle.end, duration: cycle.duration, resetTimeFormat: .remaining))
+            windows.append(LimitWindow(id: "actions-remaining", label: L10n.t("Minutes remaining"),
+                                       usedText: minutesText(max(0, allowance - minutes))))
+            if minutes > allowance {
+                windows.append(LimitWindow(id: "actions-overage", label: L10n.t("Minutes over allowance"),
+                                           usedText: minutesText(minutes - allowance)))
+            }
+        } else {
+            windows.append(LimitWindow(id: "actions-minutes", label: L10n.t("Actions minutes · Month"),
+                                       usedText: minuteText, resetsAt: cycle.end,
+                                       duration: cycle.duration, prefersUsedText: true))
+        }
+        windows.append(LimitWindow(id: "actions-cost", label: L10n.t("Actions net cost · Month"),
+                                   usedText: cost.formatted(.currency(code: "USD")),
+                                   resetsAt: cycle.end, duration: cycle.duration, prefersUsedText: true))
+        return windows
     }
 }

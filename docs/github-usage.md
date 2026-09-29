@@ -10,7 +10,10 @@ organization or enterprise level.
 
 1. Add a display and give it a recognizable name.
 2. Select Copilot or the Actions reporting scope. For Actions, enter the username,
-   organization name or enterprise **slug**, not a URL.
+   organization name or enterprise **slug**, not a URL. Set the monthly minutes
+   allowance: personal Free 2,000; Pro 3,000; Team 3,000; Enterprise 50,000.
+   Existing enterprise displays default to 50,000; other Actions displays default
+   to 2,000. Adjust it to the actual plan.
 3. Keep `github.com`, or use a GitHub Enterprise Cloud data-residency host such as
    `company.ghe.com`. Self-hosted GitHub Enterprise Server is not supported.
 4. Choose a separate token (stored only in the macOS login keychain) or a named
@@ -49,13 +52,22 @@ must be replaced in the display; this version does not mint GitHub App tokens.
 
 The selected account's existing CLI token may work for Copilot while lacking
 billing permission. Use a separate billing token in that case; the private CLI
-login does not need to change.
+login does not need to change. For a personal Actions report, a CLI OAuth token
+may need the `user` scope (`gh auth refresh --hostname github.com --scopes user`).
+This is broader than read-only and includes profile write access; a separate
+fine-grained token with **Plan: read** is the narrower alternative.
 
 - Runner minutes sum `grossQuantity` only for Actions items with `unitType=minutes`.
 - Net USD cost sums Actions `netAmount`, including storage SKUs and discounts.
 - Storage quantities are never added to minutes; Copilot and other products are
-  excluded. No assumed free-minute allowance, budget percentage or live workflow
-  count is shown. Billing data can be delayed.
+  excluded. The ring displays minutes / configured monthly allowance. The popup
+  shows used / allowance minutes, remaining minutes, any overage, net cost, and
+  a live countdown to the next UTC month. Percentages above 100% remain visible;
+  the ring and bar fill cap at 100%, and remaining minutes stop at zero.
+- The allowance is configurable and is **not** returned by this API. This is a
+  raw-minute comparison, not an exact calculation of GitHub's included credit
+  across different runner prices, OS types or always-billed larger runners.
+  Net cost remains the actual API amount. Billing data can be delayed.
 - Empty valid data reports zero; malformed data, authentication/permission errors,
   and rate limits do not become zero usage.
 

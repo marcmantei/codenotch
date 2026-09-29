@@ -110,6 +110,38 @@ final class TooltipRenderTests: XCTestCase {
         add(attachment)
     }
 
+    func testGitHubActionsAllowanceCardsRender() throws {
+        let now = ISO8601DateFormatter().date(from: "2026-09-30T14:00:00Z")!
+        for (name, minutes, allowance) in [("Enterprise", 31539, 50000), ("Personal", 5049, 2000)] {
+            let data = Data("{\"usageItems\":[{\"product\":\"Actions\",\"unitType\":\"minutes\",\"grossQuantity\":\(minutes),\"netAmount\":0}]}".utf8)
+            let windows = try GitHubActionsUsage.windows(from: data, now: now, allowance: Double(allowance))
+            let snapshot = ProviderSnapshot(id: name, displayName: "Actions · \(name)", glyph: .github,
+                                            fidelity: .official, status: .ok, windows: windows,
+                                            headlineID: "actions-minutes", plan: name)
+            let view = HStack(spacing: 20) {
+                VStack {
+                    ProviderRing(usedFraction: snapshot.usedFraction, glyph: .github)
+                    Text(snapshot.headlineText).foregroundStyle(.white)
+                }
+                TooltipCard(snapshot: snapshot, now: now, direction: .trailing)
+            }
+            .padding(20).background(Color.black)
+            .environment(\.colorScheme, .dark)
+            .environment(\.notchSurfaceStyle, .solid)
+            .environment(\.codenotchAccentColor, .blue)
+            .environment(\.codenotchHeadlessGlass, true)
+            let renderer = ImageRenderer(content: view)
+            renderer.scale = 2
+            let image = try XCTUnwrap(renderer.nsImage)
+            let tiff = try XCTUnwrap(image.tiffRepresentation)
+            let png = try XCTUnwrap(NSBitmapImageRep(data: tiff)?.representation(using: .png, properties: [:]))
+            let attachment = XCTAttachment(data: png, uniformTypeIdentifier: "public.png")
+            attachment.name = "github-actions-\(name)"
+            attachment.lifetime = .keepAlways
+            add(attachment)
+        }
+    }
+
     private func session(_ name: String, _ state: AgentSession.State,
                          minutes: Int) -> AgentSession {
         AgentSession(id: name, name: name, detail: "Terminal · usage-notch",

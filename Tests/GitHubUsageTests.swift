@@ -63,6 +63,68 @@ final class GitHubUsageTests: XCTestCase {
         }
     }
 
+    func testAllowanceCreatesPercentageBarAndMinutePopup() throws {
+        let data = Data(#"{"usageItems":[{"product":"Actions","unitType":"minutes","grossQuantity":31539,"netAmount":0}]}"#.utf8)
+        let windows = try GitHubActionsUsage.windows(from: data, now: date, allowance: 50_000)
+        let snapshot = ProviderSnapshot(id: "work", displayName: "Work", glyph: .github,
+                                        fidelity: .official, status: .ok, windows: windows, headlineID: "actions-minutes")
+        XCTAssertEqual(snapshot.headlineText, "63%")
+        XCTAssertEqual(try XCTUnwrap(snapshot.ringFraction), 0.63078, accuracy: 0.000001)
+        XCTAssertFalse(windows[0].prefersUsedText)
+        XCTAssertEqual(windows[0].detail, "\(31539.formatted()) / \(50000.formatted()) min")
+        XCTAssertEqual(windows[1].usedText, "\(18461.formatted()) min")
+        XCTAssertEqual(windows[0].resetTimeFormat, .remaining)
+        XCTAssertEqual(ResetCopy.text(for: try XCTUnwrap(windows[0].resetsAt), now: date,
+                                      format: try XCTUnwrap(windows[0].resetTimeFormat), locale: Locale(identifier: "en")), "Resets in 30 min")
+        XCTAssertEqual(snapshot.compactRowCount, 2)
+        let archived = try JSONDecoder().decode([LimitWindow].self, from: JSONEncoder().encode(windows))
+        XCTAssertEqual(archived, windows)
+    }
+
+    func testOverAllowanceKeepsFullPercentageAndShowsOverage() throws {
+        let data = Data(#"{"usageItems":[{"product":"Actions","unitType":"minutes","grossQuantity":5049,"netAmount":18.294}]}"#.utf8)
+        let windows = try GitHubActionsUsage.windows(from: data, now: date, allowance: 2_000)
+        let snapshot = ProviderSnapshot(id: "personal", displayName: "Personal", glyph: .github,
+                                        fidelity: .official, status: .ok, windows: windows, headlineID: "actions-minutes")
+        XCTAssertEqual(snapshot.headlineText, "252%")
+        XCTAssertEqual(windows[1].usedText, "0 min")
+        XCTAssertEqual(windows[2].id, "actions-overage")
+        XCTAssertEqual(windows[2].usedText, "\(3049.formatted()) min")
+        XCTAssertEqual(windows[3].usedText, 18.294.formatted(.currency(code: "USD")))
+        XCTAssertEqual(snapshot.compactRowCount, 3)
+    }
+
+    func testAllowancesAreIndependentAndOlderAccountsStillDecode() throws {
+        var work = account()
+        var personal = account(.user)
+        XCTAssertEqual(work.effectiveMinutesAllowance, 50_000)
+        XCTAssertEqual(personal.effectiveMinutesAllowance, 2_000)
+        personal.monthlyMinutesAllowance = 3_000
+        XCTAssertEqual(personal.effectiveMinutesAllowance, 3_000)
+        XCTAssertEqual(work.effectiveMinutesAllowance, 50_000)
+        let encoded = try JSONEncoder().encode(work)
+        XCTAssertFalse(String(decoding: encoded, as: UTF8.self).contains("monthlyMinutesAllowance"))
+        XCTAssertEqual(try JSONDecoder().decode(GitHubUsageAccount.self, from: encoded).effectiveMinutesAllowance, 50_000)
+        for invalid in [0.0, -1, 0.5, Double.infinity, Double.nan] {
+            work.monthlyMinutesAllowance = invalid
+            XCTAssertNotNil(work.validationMessage)
+            XCTAssertThrowsError(try GitHubActionsUsage.windows(from: Data(#"{"usageItems":[]}"#.utf8), now: date, allowance: invalid))
+        }
+    }
+
+    func testZeroUsageAndUTCMonthRolloverIncludingLeapYear() throws {
+        for (now, next) in [("2026-12-31T23:59:00Z", "2027-01-01T00:00:00Z"),
+                            ("2028-02-20T10:00:00Z", "2028-03-01T00:00:00Z")] {
+            let formatter = ISO8601DateFormatter()
+            let windows = try GitHubActionsUsage.windows(from: Data(#"{"usageItems":[]}"#.utf8),
+                                                       now: formatter.date(from: now)!, allowance: 2_000)
+            XCTAssertEqual(windows[0].usedFraction, 0)
+            XCTAssertEqual(windows[0].resetsAt, formatter.date(from: next))
+            XCTAssertEqual(windows[1].usedText, "\(2000.formatted()) min")
+            XCTAssertFalse(windows.contains { $0.id == "actions-overage" })
+        }
+    }
+
     private func session(status: Int = 200, headers: [String: String] = [:], data: Data = Data(#"{"usageItems":[]}"#.utf8)) -> URLSession {
         GitHubUsageEndpoint.reset(status: status, headers: headers, data: data)
         let config = URLSessionConfiguration.ephemeral
@@ -81,6 +143,10 @@ final class GitHubUsageTests: XCTestCase {
         let a = try await work.fetchSnapshot()
         let b = try await personal.fetchSnapshot()
         XCTAssertNotEqual(a.id, b.id)
+        XCTAssertEqual(a.windows[0].usedFraction, 0)
+        XCTAssertEqual(b.windows[0].usedFraction, 0)
+        XCTAssertEqual(a.windows[1].usedText, "\(50000.formatted()) min")
+        XCTAssertEqual(b.windows[1].usedText, "\(2000.formatted()) min")
         XCTAssertEqual(GitHubUsageEndpoint.requests.map { $0.value(forHTTPHeaderField: "Authorization") }, ["Bearer work-test-token", "Bearer private-test-token"])
         XCTAssertEqual(GitHubUsageEndpoint.requests[0].value(forHTTPHeaderField: "X-GitHub-Api-Version"), "2026-03-10")
     }

@@ -36,6 +36,12 @@ struct GitHubUsageAccount: Codable, Equatable, Identifiable, Sendable {
     var host = "github.com"
     var authentication: Authentication = .token
     var cliUsername = ""
+    /// A configured allowance, not a limit returned by the billing API.
+    /// Optional so configurations saved by earlier builds remain readable.
+    var monthlyMinutesAllowance: Double?
+    var effectiveMinutesAllowance: Double {
+        monthlyMinutesAllowance ?? (report == .enterprise ? 50_000 : 2_000)
+    }
     // Changes when a token is replaced, invalidating in-flight reads and caches.
     var credentialRevision = UUID().uuidString
 
@@ -52,6 +58,9 @@ struct GitHubUsageAccount: Codable, Equatable, Identifiable, Sendable {
         }
         if report != .copilot && !Self.isSlug(owner) {
             return L10n.t("Enter the account, organization or enterprise slug from its GitHub URL.")
+        }
+        if report != .copilot && (!effectiveMinutesAllowance.isFinite || effectiveMinutesAllowance < 1) {
+            return L10n.t("Enter a monthly allowance of at least 1 minute.")
         }
         if authentication == .cli && !Self.isSlug(cliUsername) {
             return L10n.t("Enter the exact username already signed in to GitHub CLI.")

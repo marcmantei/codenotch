@@ -28,7 +28,7 @@ struct GitHubUsageSettingsView: View {
                 }
             }
             Section(L10n.t("About these reports")) {
-                Text(L10n.t("Actions reports show the current UTC month's billing usage: runner minutes and net costs after discounts. GitHub may publish billing data with a delay. These are not live workflow metrics or a remaining free-minute quota."))
+                Text(L10n.t("Actions reports show the current UTC month's billed runner minutes against your configured allowance. The popup shows minutes, net cost and time until the next month. Billing data can be delayed; runner pricing can affect actual included usage."))
                 Text(L10n.t("The built-in GitHub Copilot display remains available in Accounts. Extra Copilot displays can use different named CLI accounts. Billing access requires a token and role authorized for the selected account, organization or enterprise."))
                 Link(L10n.t("GitHub billing API and permissions"), destination: URL(string: "https://docs.github.com/en/billing/tutorials/automate-usage-reporting")!)
             }.font(.callout)
@@ -76,6 +76,12 @@ private struct GitHubUsageEditor: View {
                 }
                 if account.report != .copilot {
                     TextField(L10n.t("Account / organization / enterprise slug"), text: $account.owner)
+                    TextField(L10n.t("Monthly minutes allowance"), value: Binding(
+                        get: { account.effectiveMinutesAllowance },
+                        set: { account.monthlyMinutesAllowance = $0 }
+                    ), format: .number)
+                    Text(L10n.t("Included minutes: Free 2,000 · Pro 3,000 · Team 3,000 · Enterprise 50,000. Adjust this allowance to your plan."))
+                        .font(.caption).foregroundStyle(.secondary)
                 }
                 TextField(L10n.t("GitHub host"), text: $account.host)
                 Picker(L10n.t("Credentials"), selection: $account.authentication) {

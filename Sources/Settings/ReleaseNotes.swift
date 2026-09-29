@@ -32,6 +32,16 @@ enum ReleaseNotes {
     static var all: [ReleaseNote] {
         [
             ReleaseNote(
+                version: "1.19.0-marc.2",
+                headline: L10n.t("GitHub Actions percentages and monthly allowances."),
+                changes: [
+                    ReleaseNote.Change(title: L10n.t("Monthly minutes allowance"),
+                        detail: L10n.t("Separate allowance percentages for personal and enterprise Actions, with minutes used, remaining and over allowance in the popup.")),
+                    ReleaseNote.Change(title: L10n.t("Time remaining"),
+                        detail: L10n.t("Actions shows a countdown to the start of the next UTC month."))
+                ]
+            ),
+            ReleaseNote(
                 version: "1.19.0-marc.1",
                 headline: L10n.t("Separate accounts for Copilot quotas and Actions billing usage."),
                 changes: [

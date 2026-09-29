@@ -1,6 +1,116 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "Enter a monthly allowance of at least 1 minute.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gib ein monatliches Kontingent von mindestens 1 Minute ein."
+          }
+        }
+      }
+    },
+    "Actions · Month": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actions · Monat"
+          }
+        }
+      }
+    },
+    "Minutes remaining": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verbleibende Minuten"
+          }
+        }
+      }
+    },
+    "Minutes over allowance": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minuten über dem Kontingent"
+          }
+        }
+      }
+    },
+    "Monthly minutes allowance": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Monatliches Minutenkontingent"
+          }
+        }
+      }
+    },
+    "Included minutes: Free 2,000 · Pro 3,000 · Team 3,000 · Enterprise 50,000. Adjust this allowance to your plan.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inklusive: Free 2.000 · Pro 3.000 · Team 3.000 · Enterprise 50.000 Minuten. Passe das Kontingent an deinen Tarif an."
+          }
+        }
+      }
+    },
+    "Actions reports show the current UTC month's billed runner minutes against your configured allowance. The popup shows minutes, net cost and time until the next month. Billing data can be delayed; runner pricing can affect actual included usage.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actions zeigt die erfassten Runner-Minuten des aktuellen UTC-Monats im Verhältnis zum eingestellten Kontingent. Das Popup zeigt Minuten, Nettokosten und die Zeit bis zum nächsten Monat. Abrechnungsdaten können verzögert sein; Runner-Preise können den tatsächlich enthaltenen Verbrauch beeinflussen."
+          }
+        }
+      }
+    },
+    "GitHub Actions percentages and monthly allowances.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prozentanzeige und Monatskontingente für GitHub Actions."
+          }
+        }
+      }
+    },
+    "Separate allowance percentages for personal and enterprise Actions, with minutes used, remaining and over allowance in the popup.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Separate Prozentanzeigen für private und Enterprise-Actions, mit verbrauchten, verbleibenden und überschrittenen Minuten im Popup."
+          }
+        }
+      }
+    },
+    "Actions shows a countdown to the start of the next UTC month.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actions zeigt die verbleibende Zeit bis zum Beginn des nächsten UTC-Monats."
+          }
+        }
+      }
+    },
     "Copilot · Personal quota": {
       "extractionState": "manual",
       "localizations": {
