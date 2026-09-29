@@ -32,6 +32,18 @@ enum ReleaseNotes {
     static var all: [ReleaseNote] {
         [
             ReleaseNote(
+                version: "1.19.0-marc.1",
+                headline: L10n.t("Separate accounts for Copilot quotas and Actions billing usage."),
+                changes: [
+                    ReleaseNote.Change(title: L10n.t("Add GitHub display"),
+                        detail: L10n.t("Configure this display in Settings → Accounts → GitHub. Your terminal login stays unchanged.")),
+                    ReleaseNote.Change(title: L10n.t("Actions · Enterprise"),
+                        detail: L10n.t("Actions reports show the current UTC month's billing usage: runner minutes and net costs after discounts. GitHub may publish billing data with a delay. These are not live workflow metrics or a remaining free-minute quota.")),
+                    ReleaseNote.Change(title: L10n.t("Fork update instructions"),
+                        detail: L10n.t("Personal fork: updates are built from marcmantei/codenotch. Original Codenotch updates are disabled to preserve your GitHub displays."))
+                ]
+            ),
+            ReleaseNote(
                 version: "1.19.0",
                 headline: L10n.t("Carry the notch anywhere round your screen by its six dots — and new versions now ask first, right in the notch."),
                 changes: [

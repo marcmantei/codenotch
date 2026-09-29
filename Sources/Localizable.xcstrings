@@ -1,6 +1,501 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "Copilot · Personal quota": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copilot · Persönliches Kontingent"
+          }
+        }
+      }
+    },
+    "Actions · Personal account": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actions · Privates Konto"
+          }
+        }
+      }
+    },
+    "Actions · Organization": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actions · Organisation"
+          }
+        }
+      }
+    },
+    "Actions · Enterprise": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actions · Enterprise"
+          }
+        }
+      }
+    },
+    "Separate token": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Separater Token"
+          }
+        }
+      }
+    },
+    "Named GitHub CLI account": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bestimmtes GitHub-CLI-Konto"
+          }
+        }
+      }
+    },
+    "Enter a display name.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gib einen Anzeigenamen ein."
+          }
+        }
+      }
+    },
+    "Use github.com or your enterprise's subdomain.ghe.com host.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verwende github.com oder die subdomain.ghe.com-Adresse deines Enterprise."
+          }
+        }
+      }
+    },
+    "Copilot quota reports currently support github.com only.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copilot-Kontingente werden derzeit nur auf github.com unterstützt."
+          }
+        }
+      }
+    },
+    "Enter the account, organization or enterprise slug from its GitHub URL.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gib den Konto-, Organisations- oder Enterprise-Namen aus der GitHub-URL ein."
+          }
+        }
+      }
+    },
+    "Enter the exact username already signed in to GitHub CLI.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gib den genauen Benutzernamen eines bereits in der GitHub CLI angemeldeten Kontos ein."
+          }
+        }
+      }
+    },
+    "Install GitHub CLI or use a separate token.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installiere die GitHub CLI oder verwende einen separaten Token."
+          }
+        }
+      }
+    },
+    "Configure this display in Settings → Accounts → GitHub. Your terminal login stays unchanged.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konfiguriere diese Anzeige unter Einstellungen → Konten → GitHub. Deine Terminal-Anmeldung bleibt unverändert."
+          }
+        }
+      }
+    },
+    "GitHub denied this report. Check the account or enterprise slug, billing permissions and SSO authorization in GitHub settings.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GitHub hat den Bericht verweigert. Prüfe Konto- oder Enterprise-Namen, Abrechnungsrechte und SSO-Freigabe in den GitHub-Einstellungen."
+          }
+        }
+      }
+    },
+    "Actions minutes · Month": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actions-Minuten · Monat"
+          }
+        }
+      }
+    },
+    "Actions net cost · Month": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actions-Kosten nach Rabatten · Monat"
+          }
+        }
+      }
+    },
+    "Add separate displays for private and work accounts. Each display has its own credentials; your active GitHub CLI login stays unchanged.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Füge getrennte Anzeigen für private und berufliche Konten hinzu. Jede Anzeige hat eigene Zugangsdaten; deine aktive GitHub-CLI-Anmeldung bleibt unverändert."
+          }
+        }
+      }
+    },
+    "Add GitHub display": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GitHub-Anzeige hinzufügen"
+          }
+        }
+      }
+    },
+    "Remove GitHub display": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GitHub-Anzeige entfernen"
+          }
+        }
+      }
+    },
+    "About these reports": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Über diese Berichte"
+          }
+        }
+      }
+    },
+    "Actions reports show the current UTC month's billing usage: runner minutes and net costs after discounts. GitHub may publish billing data with a delay. These are not live workflow metrics or a remaining free-minute quota.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actions-Berichte zeigen den abgerechneten Verbrauch im aktuellen UTC-Monat: Runner-Minuten und Kosten nach Rabatten. GitHub stellt Abrechnungsdaten eventuell verzögert bereit. Dies sind keine Live-Workflow-Metriken oder verbleibenden Freiminuten."
+          }
+        }
+      }
+    },
+    "The built-in GitHub Copilot display remains available in Accounts. Extra Copilot displays can use different named CLI accounts. Billing access requires a token and role authorized for the selected account, organization or enterprise.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die vorhandene GitHub-Copilot-Anzeige bleibt unter Konten verfügbar. Weitere Copilot-Anzeigen können andere CLI-Konten verwenden. Für Abrechnungsdaten benötigst du einen Token und die passenden Rechte für das gewählte Konto, die Organisation oder das Enterprise."
+          }
+        }
+      }
+    },
+    "GitHub billing API and permissions": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GitHub-Abrechnungs-API und Berechtigungen"
+          }
+        }
+      }
+    },
+    "Remove this GitHub display?": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese GitHub-Anzeige entfernen?"
+          }
+        }
+      }
+    },
+    "Only this display, its readings and its saved token are removed. GitHub CLI remains signed in.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nur diese Anzeige, ihre Messwerte und ihr gespeicherter Token werden entfernt. Die GitHub CLI bleibt angemeldet."
+          }
+        }
+      }
+    },
+    "GitHub display": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GitHub-Anzeige"
+          }
+        }
+      }
+    },
+    "Display name": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anzeigename"
+          }
+        }
+      }
+    },
+    "Report": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bericht"
+          }
+        }
+      }
+    },
+    "Account / organization / enterprise slug": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konto- / Organisations- / Enterprise-Name"
+          }
+        }
+      }
+    },
+    "GitHub host": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GitHub-Host"
+          }
+        }
+      }
+    },
+    "Credentials": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zugangsdaten"
+          }
+        }
+      }
+    },
+    "Paste token": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Token einfügen"
+          }
+        }
+      }
+    },
+    "New token (leave empty to keep saved token)": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neuer Token (leer lassen, um gespeicherten Token zu behalten)"
+          }
+        }
+      }
+    },
+    "Saved only in your macOS login keychain. Enterprise reports need enterprise billing access; organization reports need organization administration access; personal reports need Plan read access. Authorize SSO if your company requires it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nur im macOS-Anmeldeschlüsselbund gespeichert. Enterprise-Berichte benötigen Abrechnungszugriff, Organisationsberichte Administrationszugriff und persönliche Berichte Plan-Lesezugriff. Erteile bei Bedarf die SSO-Freigabe deiner Firma."
+          }
+        }
+      }
+    },
+    "GitHub CLI username": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GitHub-CLI-Benutzername"
+          }
+        }
+      }
+    },
+    "Uses this already signed-in account explicitly, without switching your terminal's active account. If billing access is denied, use a separate token with billing permissions.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verwendet gezielt dieses bereits angemeldete Konto, ohne das aktive Terminal-Konto zu wechseln. Falls der Abrechnungszugriff verweigert wird, verwende einen separaten Token mit Abrechnungsrechten."
+          }
+        }
+      }
+    },
+    "Test connection": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verbindung testen"
+          }
+        }
+      }
+    },
+    "Could not save the token in your keychain. No settings were changed.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Token konnte nicht im Schlüsselbund gespeichert werden. Es wurden keine Einstellungen geändert."
+          }
+        }
+      }
+    },
+    "No valid login. Check the token or named CLI account.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine gültige Anmeldung. Prüfe den Token oder das angegebene CLI-Konto."
+          }
+        }
+      }
+    },
+    "Keychain access was denied. Save a new token in this display.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Schlüsselbundzugriff wurde verweigert. Speichere einen neuen Token in dieser Anzeige."
+          }
+        }
+      }
+    },
+    "GitHub's rate limit was reached. Wait before trying again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das GitHub-Anfragelimit wurde erreicht. Warte vor dem nächsten Versuch."
+          }
+        }
+      }
+    },
+    "GitHub could not return this report. Check your connection, credentials and billing access.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GitHub konnte diesen Bericht nicht liefern. Prüfe Verbindung, Zugangsdaten und Abrechnungszugriff."
+          }
+        }
+      }
+    },
+    "Separate accounts for Copilot quotas and Actions billing usage.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Getrennte Konten für Copilot-Kontingente und Actions-Abrechnungsdaten."
+          }
+        }
+      }
+    },
+    "Personal fork: updates are built from marcmantei/codenotch. Original Codenotch updates are disabled to preserve your GitHub displays.": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Persönlicher Fork: Updates werden aus marcmantei/codenotch gebaut. Original-Codenotch-Updates sind deaktiviert, damit deine GitHub-Anzeigen erhalten bleiben."
+          }
+        }
+      }
+    },
+    "Fork update instructions": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update-Anleitung für den Fork"
+          }
+        }
+      }
+    },
     "%@ · %@": {
       "extractionState": "manual",
       "localizations": {

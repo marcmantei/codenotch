@@ -56,6 +56,35 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(lmstudioEndpoint, forKey: Keys.lmstudioEndpoint) }
     }
 
+    @Published var githubUsageAccounts: [GitHubUsageAccount] {
+        didSet {
+            if let data = try? JSONEncoder().encode(githubUsageAccounts) {
+                defaults.set(data, forKey: "githubUsageAccounts")
+            }
+        }
+    }
+
+    nonisolated static func storedGitHubUsageAccounts(defaults: UserDefaults = .standard) -> [GitHubUsageAccount] {
+        guard let data = defaults.data(forKey: "githubUsageAccounts"),
+              let accounts = try? JSONDecoder().decode([GitHubUsageAccount].self, from: data) else { return [] }
+        return accounts
+    }
+
+    func saveGitHubUsageAccount(_ account: GitHubUsageAccount) {
+        if let index = githubUsageAccounts.firstIndex(where: { $0.id == account.id }) {
+            githubUsageAccounts[index] = account
+        } else {
+            githubUsageAccounts.append(account)
+            setConnected(true, for: account.providerID)
+        }
+    }
+
+    func removeGitHubUsageAccount(_ account: GitHubUsageAccount) {
+        setConnected(false, for: account.providerID)
+        githubUsageAccounts.removeAll { $0.id == account.id }
+        GitHubUsageCredentials.delete(account: account)
+    }
+
     /// User-configured custom OpenAI-compatible endpoints.
     @Published var customEndpoints: [CustomEndpoint] {
         didSet {
@@ -910,6 +939,7 @@ final class Preferences: ObservableObject {
             ?? SessionChime.defaultBlocked
         self.geminiAPIMonthlyTokenBudget = Self.storedGeminiAPIMonthlyTokenBudget(defaults: defaults)
         self.minimaxRegion = Self.storedMinimaxRegion(defaults: defaults)
+        self.githubUsageAccounts = Self.storedGitHubUsageAccounts(defaults: defaults)
         if let data = defaults.data(forKey: Keys.customEndpoints),
            let list = try? JSONDecoder().decode([CustomEndpoint].self, from: data) {
             self.customEndpoints = Self.movingLegacyKeysToKeychain(list, defaults: defaults)

@@ -36,6 +36,8 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>CodenotchForkBuild</key>
+	<true/>
 	<key>LSMinimumSystemVersion</key>
 	<string>15.0</string>
 	<key>NSLocalNetworkUsageDescription</key>
@@ -43,7 +45,7 @@
 	<key>SUAutomaticallyUpdate</key>
 	<false/>
 	<key>SUEnableAutomaticChecks</key>
-	<true/>
+	<false/>
 	<key>SUFeedURL</key>
 	<string>https://hivinz.com/appcast.xml</string>
 	<key>SUPublicEDKey</key>

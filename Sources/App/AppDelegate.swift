@@ -181,6 +181,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                    })]
                 + webProviders
                 + customProviders
+                + preferences.githubUsageAccounts.map { GitHubUsageProvider(account: $0) }
             preferences.reconcile(discoveredIDs: allProviders.map(\.id))
             let store = UsageStore(
                 providers: allProviders,
@@ -191,6 +192,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 // order for a frame and then visibly shuffles.
                 order: preferences.providerOrder
             )
+            preferences.$githubUsageAccounts
+                .dropFirst()
+                .removeDuplicates()
+                .receive(on: RunLoop.main)
+                .sink { [weak store] accounts in
+                    store?.registerGitHubUsageProviders(accounts.map { GitHubUsageProvider(account: $0) })
+                }
+                .store(in: &cancellables)
             preferences.$customEndpoints
                 .map { endpoints in
                     endpoints.filter(\.isEnabled).map {

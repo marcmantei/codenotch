@@ -237,8 +237,8 @@ struct LimitWindow: Identifiable, Codable, Equatable {
                 ? L10n.t("\(remaining) left", locale: locale)
                 : L10n.t("\(Self.compact(remaining)) left", locale: locale)
         }
+        if let usedText { return usedText }
         if let used {
-            if let usedText { return usedText }
             return used < 10_000
                 ? L10n.t("\(used) used", locale: locale)
                 : L10n.t("\(Self.compact(used)) used", locale: locale)

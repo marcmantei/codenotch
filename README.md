@@ -1,3 +1,7 @@
+> **Personal fork:** Includes independent GitHub Copilot and Actions billing displays.
+> See [setup and update instructions](docs/github-usage.md). Original binary
+> updates are disabled in this fork to preserve the extension.
+
 <div align="center">
 
 ![Codenotch](docs/design/codenotch-banner.png)

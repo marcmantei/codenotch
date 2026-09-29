@@ -466,7 +466,7 @@ private struct LimitWindowRow: View {
     /// A count-only row (no fraction, no reset) — like Ollama's per-model request
     /// counts — renders as a single table line: name left, count right.
     private var isCountRow: Bool {
-        window.usedFraction == nil && (window.used != nil || window.detail != nil)
+        window.usedFraction == nil && (window.used != nil || window.detail != nil || window.usedText != nil)
     }
 
     var body: some View {
