@@ -501,9 +501,12 @@ actor ClaudeOAuthProvider: UsageProvider {
     }
 
     nonisolated var signInRoute: SignInRoute {
+        if profile.atriumEmail != nil {
+            return .guidance("Reconnect this Claude account in Atrium, then refresh Codenotch.")
+        }
         // Names the command for a profile, because that is the only way to
         // reach it: plain `claude` signs the default one in, not this.
-        .command("\(profile.signInCommand) auth login", name: displayName,
+        return .command("\(profile.signInCommand) auth login", name: displayName,
                  install: URL(string: "https://docs.claude.com/en/docs/claude-code/setup"))
     }
 

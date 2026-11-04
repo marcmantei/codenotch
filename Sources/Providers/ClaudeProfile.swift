@@ -24,6 +24,8 @@ struct ClaudeProfile: Equatable, Hashable {
     /// Nil for `~/.claude`; the part after `.claude-` otherwise.
     let slug: String?
     let configDirectory: URL
+    /// Metadata only; the credential remains in Atrium’s account-specific keychain item.
+    var atriumEmail: String? = nil
 
     /// `~/.claude`, whether or not it exists — the app has always read it.
     static func `default`(home: URL = homeDirectory) -> ClaudeProfile {
@@ -72,8 +74,48 @@ struct ClaudeProfile: Equatable, Hashable {
             }
             return candidate
         }
-        return [ClaudeProfile.default(home: home)]
+        let native = [ClaudeProfile.default(home: home)]
             + extras.sorted { $0.slug! < $1.slug! }
+        var addresses = Set(native.compactMap { $0.signedInAddress()?.lowercased() })
+        let atrium = atriumProfiles(home: home).filter { profile in
+            guard let address = profile.atriumEmail?.lowercased(),
+                  !addresses.contains(address), hasCredential(profile) else { return false }
+            addresses.insert(address)
+            return true
+        }
+        return native + atrium
+    }
+
+    /// Atrium isolates accounts beneath ~/.atrium instead of ~/.claude-<slug>.
+    /// Read its versioned metadata registry, never its OAuth cache or refresh tokens.
+    static func atriumProfiles(home: URL) -> [ClaudeProfile] {
+        struct Registry: Decodable {
+            struct Record: Decodable {
+                let path: String
+                let keychainService: String
+                let email: String
+                let state: String
+            }
+            let version: Int
+            let records: [String: Record]
+        }
+        let root = home.appendingPathComponent(".atrium/claude-accounts").standardizedFileURL.path + "/"
+        let url = home.appendingPathComponent(".atrium/claude-accounts-stores.json")
+        guard let data = try? Data(contentsOf: url),
+              let registry = try? JSONDecoder().decode(Registry.self, from: data),
+              registry.version == 1 else { return [] }
+        return registry.records.sorted { $0.key < $1.key }.compactMap { key, record in
+            guard record.state == "active", !record.email.isEmpty,
+                  !key.isEmpty, key.allSatisfy({ $0.isLetter || $0.isNumber || $0 == "-" })
+            else { return nil }
+            let directory = URL(fileURLWithPath: record.path).standardizedFileURL
+            guard directory.path.hasPrefix(root) else { return nil }
+            let profile = ClaudeProfile(slug: "atrium-" + key, configDirectory: directory,
+                                        atriumEmail: record.email)
+            // Do not follow arbitrary keychain service names from a registry.
+            guard profile.keychainService == record.keychainService else { return nil }
+            return profile
+        }
     }
 
     /// Whether Claude Code has ever filed a token for this profile's directory.
@@ -276,7 +318,7 @@ struct ClaudeProfile: Equatable, Hashable {
     /// — the one question two Claude rings actually raise. It is also readable
     /// without a keychain prompt, which is the whole point of asking here.
     func signedInAddress() -> String? {
-        guard let address = account()?.emailAddress, !address.isEmpty else { return nil }
+        guard let address = atriumEmail ?? account()?.emailAddress, !address.isEmpty else { return nil }
         return address
     }
 
@@ -357,7 +399,7 @@ struct ClaudeProfile: Equatable, Hashable {
     /// Which tool the credential is borrowed from, said so that two Claude rows
     /// in Settings can be told apart.
     var sourceName: String {
-        slug == nil ? "Claude Code" : "Claude Code in \(displayPath)"
+        atriumEmail != nil ? "Atrium" : (slug == nil ? "Claude Code" : "Claude Code in \(displayPath)")
     }
 
     /// The command that signs this profile in.
