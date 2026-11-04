@@ -480,6 +480,8 @@ struct ProviderSnapshot: Identifiable, Equatable {
         case "claude":     return L10n.t("Sign in to Claude Code to read your usage", locale: locale)
         // A profile is signed in by running Claude Code against its directory,
         // which is worth saying: plain `claude` signs the default one in.
+        case _ where id.hasPrefix("claude-atrium-"):
+            return "Reconnect this Claude account in Atrium to read your usage"
         case _ where ClaudeProfile.isClaude(providerID: id):
             let slug = ClaudeProfile.slug(fromProviderID: id) ?? ""
             return L10n.t("Sign in to Claude Code in ~/.claude-\(slug) to read your usage", locale: locale)
